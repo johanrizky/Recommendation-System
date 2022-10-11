@@ -3,7 +3,7 @@
 
 ## Project Overview
 
-Sekarang ini kita dapat *browsing* film atau membeli barang pada toko online. Juga dalam *browsing* dalam *web* film atau toko online tersebut kita biasanya mendapatkan rekomendasi sesuai popularitas menurut pengunjung yang menonton atau membeli barang. Rekomendasi tersebut tentu menggunakan bumbu kecerdasasan buatan yang dibuat oleh manusia. Sistem rekomendasi merupakan bagian yang dipelajari pada *Machine Learning*. Sistem rekomendasi sekarang merupakan bidang yang menarik untuk dipelajari. Mengutip dari dari prosiding [*Comparative Analysis of Machine Learning based Filtering Techniques using MovieLens dataset*](https://www.sciencedirect.com/science/article/pii/S1877050921021165) oleh Mohammed Talha Alam, menurut penelitian Badrul Sarwar dan timnya mengakui bahwa sistem rekomendasi telah menjadi alat penting untuk *e-commerce* saat ini dari data penggunaan di beberapa *web* dan karena kualitas sistem rekomendasi diperlukan dengan skalabilitas yang dapat membantu pelanggan menemukan produk atau sesuatu yang dibutuhkan dan menguntungkan penyedia. Dalam laporan ini akan menjelaskan tahapan membuat sistem rekomendasi berdasarkan proyek saya, dimana didalamnya akan menerapkan model *Machine Learning Recommendation System*. Dimana dalam proyek ini diharapkan dapat menghasilkan *output* untuk membantu rekomendasi user untuk menonton film berdasarkan film kesukaan *user*, dari *rating* yang diberikannya. Seperti output yang diharapkan, proyek ini sendiri menggunakan referensi dari web [*movielens.org*](https://movielens.org/). Karena untuk memenuhi ketentuan dari laporan ini, juga akan menjelaskan sistem rekomendasi menggunakan pendekatan *content based filtering* dan *collaborative filtering*.
+Sekarang ini kita dapat *browsing* film atau membeli barang pada toko *online*. Juga dalam *browsing* dalam *web* film atau toko *online* tersebut kita biasanya mendapatkan rekomendasi sesuai popularitas menurut pengunjung yang menonton atau membeli barang. Rekomendasi tersebut tentu menggunakan bumbu kecerdasasan buatan yang dibuat oleh manusia. Sistem rekomendasi merupakan bagian yang dipelajari pada *Machine Learning*. Sistem rekomendasi sekarang merupakan bidang yang menarik untuk dipelajari. Mengutip dari dari prosiding [*Comparative Analysis of Machine Learning based Filtering Techniques using MovieLens dataset*](https://www.sciencedirect.com/science/article/pii/S1877050921021165) oleh Mohammed Talha Alam, menurut penelitian Badrul Sarwar dan timnya mengakui bahwa sistem rekomendasi telah menjadi alat penting untuk *e-commerce* saat ini dari data penggunaan di beberapa *web* dan karena kualitas sistem rekomendasi diperlukan dengan skalabilitas yang dapat membantu pelanggan menemukan produk atau sesuatu yang dibutuhkan dan menguntungkan penyedia. Dalam laporan ini akan menjelaskan tahapan membuat sistem rekomendasi berdasarkan proyek saya, dimana didalamnya akan menerapkan model *Machine Learning Recommendation System*. Dimana dalam proyek ini diharapkan dapat menghasilkan *output* untuk membantu rekomendasi *user* untuk menonton film berdasarkan film kesukaan *user*, dari *rating* yang diberikannya seperti *output* yang diharapkan, proyek ini sendiri menggunakan referensi dari web [*movielens.org*](https://movielens.org/). Karena untuk memenuhi ketentuan dari laporan ini, juga akan menjelaskan sistem rekomendasi menggunakan pendekatan *content based filtering* dan *collaborative filtering*.
 
 
 ## Business Understanding
@@ -12,8 +12,7 @@ Sekarang ini kita dapat *browsing* film atau membeli barang pada toko online. Ju
 
 - Apakah pengguna bisa mendapatkan rekomendasi berdasarkan judul film yang dicari pengguna?
 - Bagaimana jika pengguna hanya menyukai beberapa film saja sehingga pengguna bingung jika menentukan judul dari yang dicari?
-- Dari kedua pertanyaan tersebut, apakah perbedaannya?
-- Apakah ada keefektifan dari kedua cara yang dinyatakan diatas?
+- Manakah yang paling efektif, pendekatan *Content Based Model* atau *Collaborative Filtering*?
 
 ### Goals
 
@@ -127,35 +126,41 @@ gambar 2. menyamakan jenis movie
 
 gambar 3. mengurutkan movie
 
-![4 dictionary dari movieId, movie_name, dan genres](https://user-images.githubusercontent.com/81506579/195045175-787b8342-8fa6-4e5c-a357-573eb9501921.jpg)
+| # 	| id 	|             movie_name             	|                      genre                      	|
+|:-:	|:--:	|:----------------------------------:	|:-----------------------------------------------:	|
+| 0 	|  1 	|          Toy Story (1995)          	| Adventure\|Animation\|Children\|Comedy\|Fantasy 	|
+| 1 	|  2 	|           Jumanji (1995)           	|           Adventure\|Children\|Fantasy          	|
+| 2 	|  3 	|       Grumpier Old Men (1995)      	|                 Comedy\|Romance                 	|
+| 3 	|  4 	|      Waiting to Exhale (1995)      	|              Comedy\|Drama\|Romance             	|
+| 4 	|  5 	| Father of the Bride Part II (1995) 	|                      Comedy                     	|
 
-gambar 4. dictionary dari movieId, movie_name, dan genres
+tabel 6. membuat dictionary dari movieId, movie_name, dan genres
 
 1. Cek missing value menggunakan isnull(). Agar bisa mengidentifikasi apakah data tersebut masih belum sama. Karena pada gambar 1 tidak ada missing jadi akan lanjut. 
 2. Menyamakan movie berdasarkan movieId menggunakan sort_values. Menyamakan movie dengan movieId diperlukan, agar movie dan movieId tidak bias pada data. Karena pada gambar 2 tidak ada yang janggal sehingga bisa lanjut ke tahap berikutnya.
 3. Masuk ke tahap preparation dengan mengurutkan fix_movie berdasarkan movieId. Untuk masuk ke tahap pemodelan perlu untuk mengetahui data duplikat, seperti pada gambar 2.
 4. Karena pada gambar 3 ada data duplikat, maka selanjutnya buang duplikat data menggunakan drop_duplicate. Agar bisa lanjut ke tahap pemodelan
 5. Selanjutnya adalah mengkonversi data series menjadi list, menggunakan fungsi tolist() dari library numpy dan mendefinisikan variabel baru untuk tahap membuat dictionary. Disini variabel movieId akan menjadi movie_id, title akan menjadi  variabel movie_name, dan genres akan menjadi variabel genre
-6. Selanjutnya membuat dictionary untuk data movie_id, movie_name, dan movie_genre lalu menyimpannya kedalam variabel movie_new. Membuat dictionary diperlukan untuk menentukan pasangan key-value pada movie_id, movie_name, dan genre berdasarkan variabel pada tahap 5 sebelumnya, sehingga dataframe menjadi seperti gambar 4.
+6. Selanjutnya membuat dictionary untuk data movie_id, movie_name, dan movie_genre lalu menyimpannya kedalam variabel movie_new. Membuat dictionary diperlukan untuk menentukan pasangan key-value pada movie_id, movie_name, dan genre berdasarkan variabel pada tahap 5 sebelumnya, sehingga dataframe menjadi seperti tabel 6.
 
 ### Data Preparation Collaborative Filtering
 
 ![5 hasil sebagian dari encoding](https://user-images.githubusercontent.com/81506579/195045296-ba50efa4-87e8-4941-8f80-b87f22aae2c3.jpg)
 
-gambar 5. hasil sebagian dari encoding userId
+gambar 4. hasil sebagian dari encoding userId
 
 ![6 cek jumlah data](https://user-images.githubusercontent.com/81506579/195045393-651b0061-7758-495f-b399-77da5f021655.jpg)
 
-gambar 6. cek jumlah data
+gambar 5. cek jumlah data
 
-1. Tahap awal yang dilakukan adalah menyandikan (encode) fitur 'user' dan 'movieId' dalam indeks integer. Hasil dari sebagian encoding fitur 'user' bisa dilihat pada gambar 5. Dalam proses encoding ini dapat memudahkan saat proses mapping userId ke dataframe user dan movieId ke dalam movie, yang selanjutnya 
-2. Selanjutnya kita cek data jumlah user, untuk mengetahui jumlah movie dan nilai minimal maksimal dari rating, seperti pada gambar 6.
+1. Tahap awal yang dilakukan adalah menyandikan (encode) fitur 'user' dan 'movieId' dalam indeks integer. Hasil dari sebagian encoding fitur 'user' bisa dilihat pada gambar 4. Dalam proses encoding ini dapat memudahkan saat proses mapping userId ke dataframe user dan movieId ke dalam movie, yang selanjutnya 
+2. Selanjutnya kita cek data jumlah user, untuk mengetahui jumlah movie dan nilai minimal maksimal dari rating, seperti pada gambar 5.
 3. Selanjutnya adalah mengacak dataset terlebih dahulu agar distribusi datanya random, menggunakan fungsi sample(frac=1).
 3. Selanjutnya membagi data train dan validasi agar bisa digunakan untuk melatih data dan menguji model. Disini saya menggunakan komposisi 80:20, tetapi sebelum itu diperlukan memetakan data user dan movie menjadi satu value dahulu dengan membuat rating dalam skala 0 sampai 1 agar mudah saat proses training.
 
 
 ## Modeling
-Dalam tahap modeling ini akan dijelaskan masing- masing dua pendekatan yang berbeda yaitu Content Based Filtering dan Collaborative Filtering.
+Dalam tahap modeling ini akan dijelaskan masing- masing dua pendekatan yang berbeda yaitu Content Based Filtering dan Collaborative Filtering. 
 
 ### Content Based Filtering
 
@@ -165,30 +170,59 @@ Algoritma ini akan menghasilkan korelasi antara movie dengan genrenya. Algoritma
 2. Algoritma Cosine Similarity
 Algoritma ini digunakan untuk menghitung derajat kesamaan (similarity degree) antar movie dengan teknik cosine similarity. Algoritma cosine Cosine Similarity akan menggunakan fungsi cosine_similarity dari library sklearn. Pada tahap ini tentu kita akan memanggil fungsi Cosine Similarity dengan dataframe yang dipanngil dari tfidf_matrix TF-IDF Vectorizer, sehingga menghasilkan keluaran berupa matriks kesamaan dalam bentuk array.
 
-![7 memasukkan data Toy Story](https://user-images.githubusercontent.com/81506579/195107532-1776d18a-4eb2-4f8a-98ed-bfdaba259547.jpg)
+| # 	| id 	|    movie_name    	|                      genre                      	|
+|:-:	|:--:	|:----------------:	|:-----------------------------------------------:	|
+| 0 	|  1 	| Toy Story (1995) 	| Adventure\|Animation\|Children\|Comedy\|Fantasy 	|
 
-gambar 7. memasukkan data Toy Story
+tabel 7. memasukkan data Toy Story
 
-![8 mendapatkan rekom dari data toy story](https://user-images.githubusercontent.com/81506579/195107709-7b083402-1573-4f8d-a024-c734050291cf.jpg)
+| # 	|                     movie_name                    	|                      genre                      	|
+|:-:	|:-------------------------------------------------:	|:-----------------------------------------------:	|
+| 0 	|               Shrek the Third (2007)              	| Adventure\|Animation\|Children\|Comedy\|Fantasy 	|
+| 1 	| Asterix and the Vikings (Astérix et les Viking... 	| Adventure\|Animation\|Children\|Comedy\|Fantasy 	|
+| 2 	|               Boxtrolls, The (2014)               	| Adventure\|Animation\|Children\|Comedy\|Fantasy 	|
+| 3 	|   Adventures of Rocky and Bullwinkle, The (2000)  	| Adventure\|Animation\|Children\|Comedy\|Fantasy 	|
+| 4 	|           Tale of Despereaux, The (2008)          	| Adventure\|Animation\|Children\|Comedy\|Fantasy 	|
 
-gambar 8. mendapatkan rekom dari data toy story
+tabel 8. mendapatkan rekom dari data toy story
 
-Dalam kedua algoritma tersebut saya menggunakan Cosine Similarity dengan mengambil dataframe cosine_sim_df yang dimasukkan kedalam kode program untuk mendapatkan rekomendasi. Selanjutnya kita akan menerapkan kode tersebut untuk menemukan movie yang mempunyai genre yang sama dengan Toy Story (1995), seperti pada gambar 7., lalu kita akan mendapatkan rekomendasi 5 movie dengan genre yang sama seperti gambar 8.
+Dalam kedua algoritma tersebut saya menggunakan Cosine Similarity dengan mengambil dataframe cosine_sim_df yang dimasukkan kedalam kode program untuk mendapatkan rekomendasi. Selanjutnya kita akan menerapkan kode tersebut untuk menemukan movie yang mempunyai genre yang sama dengan Toy Story (1995), seperti pada tabel 7., lalu kita akan mendapatkan rekomendasi 5 movie dengan genre yang sama seperti tabel 8.
 
 ### Collaborative Filtering
 
-![9 Top 10 recommendation collaborative](https://user-images.githubusercontent.com/81506579/195107894-1f981bdd-ee5c-4aae-927e-1fbd190c2db2.jpg)
+Sebelum memasuki tahap ke Collaborative Filtering, perlu untuk membuat class *RecommenderNet* dengan keras Model class, yang terinsipirasi dari tutorial dalam situs Keras dengan beberapa adaptasi menyesuaikan kasus ini. Tahap yang dilakukan adalah membuat class RecommenderNet(tf.keras.Model) yang didalamnya menginilasasi fungsinya, dan tidak lupa melakukan proses embedding terhadap data 'user' dan 'movie'. Selanjutnya melakukan operasi perkalian dot antara embedding user dengan movie, juga menambahkan bias untuk setiap 'user' dan 'resto' dengan skor kecocokan ditetapkan dalam skala [0,1] dengan fungsi aktivasi sigmoid.
+Setelah menerapkan kode dalam class RecommenderNet selanjutnya menginisialisasi model dengan memanggil RecommenderNet yang didalamnya berisi num_users, dan num_resto (sesuai pada class RecommenderNet). Selanjutnya memanggil model.compile yang didalamnya terdapat parameter:
+1. loss = tf.keras.losses.BinaryCrossentropy(), merupakan fungsi loss default dari library tensorflow Keras.
+2. optimizer = keras.optimizers.Adam(learning_rate=0.001), merupakan optimizers yang dipanggil dari library Keras. Menggunakan learning_rate=0.001, dimana semakin besar nilai yang diberikan akan semakin cepat proses trainingnya.
+3. metrics=[tf.keras.metrics.RootMeanSquaredError(), membuat metric RootMeanSquaredError dari Keras.
 
-gambar 9. Top 10 recommendation using collaborative
+|         Judul Film         	|               Genre               	|
+|:--------------------------:	|:---------------------------------:	|
+|        Scream (1996)       	| Comedy\|Horror\|Mystery\|Thriller 	|
+|        Benny & Joon        	|          Comedy\|Romance          	|
+| Grosse Pointe Blank (1997) 	|       Comedy\|Crime\|Romance      	|
+|  Dangerous Liaisons (1988) 	|           Drama\|Romance          	|
+|       Superman (1978)      	|     Action\|Adventure\|Sci-Fi     	|
 
-Sebelum mendapatkan rekomendasi movie menggunakan Collaborative Filtering, perlu mengambil user secara acak dan mendefinisikan variabel movie_not_watched yang merupakan daftar movie yang belum pernah ditonton oleh pengguna. karena daftar movie_not_watched yang akan direkomendasikan. Juga sebelumnya pengguna memberi rating pada movie yang pernah ditontonnya, karena akan menggunakan data dari rating tersebut untuk merekomendasikan movie_not_watched. Setelah menerapkan kode untuk mendapatkan rekomendasi, selanjutnya menggunakan fungsi model.predict() untuk mendapatkan top 10 movie rekomendasi untuk pengguna (disini contoh pengguna id 560) yang menyukai beberapa genre dari comedy, horror, drama mendapatkan hasil yang hampir serupa dengan riwayat rating dari movie yang ditonton.
+tabel 9. *Top 5 high ratings from user* 560
 
-### Kesimpulan dari kedua pendekatan tersebut
+|              Judul Film              	|            Genre            	|
+|:------------------------------------:	|:---------------------------:	|
+|               Godfather              	|         Crime\|Drama        	|
+|       Full Metal Jacket (1987)       	|          Drama\|War         	|
+|            Henry V (1989)            	| Action\|Drama\|Romance\|War 	|
+|            Amadeus (1984)            	|            Drama            	|
+|           Annie Hall (1977)          	|       Comedy\|Romance       	|
+|     Boot, Das (Boat, The) (1981)     	|      Action\|Drama\|War     	|
+|           Sting, The (1973)          	|        Comedy\|Crime        	|
+|       Dead Poets Society (1989)      	|            Drama            	|
+|         Graduate, The (1967)         	|    Comedy\|Drama\|Romance   	|
+| Bridge on the River Kwai, The (1957) 	|    Adventure\|Drama\|War    	|
 
-Menurut saya kedua pendekatan tersebut memiliki kelebihan masing- masing karena kedua pendekatan tersebut sangat berguna bila digunakan sesuai kebutuhan yang diperlukan. 
-Pertama adalah Content Based model. Pendekatan ini sangat berguna disini bila pengguna akan mencari genre yang sama dari sebuah film maka pengguna akan diberi langsung daftar genre sesuai yang ingin dicari, misalnya pengguna mencari sebuah genre drama maka pengguna akan diberi rekomendasi beberapa genre drama yang tersedia. Kekurangan dari pendekatan ini adalah pengguna bisa saja tidak cocok dengan film yang direkomendasikan oleh sistem tersebut, karena tidak semua genre drama sesuai yang ingin dicari. Misalnya pengguna menyukai genre drama yang dipadukan dengan action tanpa romansa, sistem bisa saja memberi rekomendasi genre drama dengan romansa yang kental dan tanpa genre action.
-kedua adalah pendekatan Collaborative Filtering. Pendekatan ini sangat berguna bila pengguna sudah mempunyai riwayat menonton film sehingga sistem bisa merekomendasikan film yang sesuai bahkan hampir sama genrenya dengan riwayat yang pengguna tonton. Kekurangan dari pendekatan ini adalah pengguna harus menonton beberapa film lalu memberi rating pada film yang dia tonton, sehingga sistem dapat merekam jejak genre yang pengguna sukai.
-Kalau untuk memilih saya lebih memilih ke Collaborative Filtering, karena pengguna bisa direkomendasikan film sesuai riwayat yang ditonton. Sehingga saat pengguna baru masuk aplikasi tersebut pengguna dapat direkomendasikan menggunakan pendekatan Content Based Model.
+tabel 10. *top 10 movie recommendation for user* 560
+
+Sebelum melanjutkan ke tahapan mendapatkan rekomendasi movie menggunakan Collaborative Filtering, perlu mengambil user secara acak dan mendefinisikan variabel movie_not_watched yang merupakan daftar movie yang belum pernah ditonton oleh pengguna. karena daftar movie_not_watched yang akan direkomendasikan. Juga sebelumnya pengguna memberi rating pada movie yang pernah ditontonnya, karena akan menggunakan data dari rating tersebut untuk merekomendasikan movie_not_watched. Setelah menerapkan kode untuk mendapatkan rekomendasi, selanjutnya menggunakan fungsi model.predict() untuk mendapatkan top 10 movie rekomendasi untuk pengguna 560 yang menyukai beberapa movie yang mempunyai genre comedy, horror, drama seperti pada tabel 9. Lalu user 560 mendapatkan hasil rekomendasi movie yang hampir serupa dengan riwayat genre movie yang ditonton, hasil dapat dilihat pada tabel 10.
+
 
 ## Evaluation
 
@@ -200,11 +234,23 @@ recommender system precision = p
 
 **p = #of recommendation that are relevant / #of item we recommend**
 
-sesuai pada gambar 8, lima genre yang keluar sama dengan genre Toy Story (1995) (sesuai gambar 7). Sehinggan precision yang didapat adalah 5/5 atau 100%.
+sesuai pada tabel 8, lima genre yang keluar sama dengan genre Toy Story (1995) (sesuai tabel 7). Sehinggan precision yang didapat adalah 5/5 atau 100%.
 
 ### Evaluasi Collaborative Filtering
 
-Pada evaluasi Collaborative Filtering disini menggunakan Roor Mean Squared Error (RMSE) sebagai metrics evaluasinya. Dalam metric ini mentraining data, mengetahui jumlah loss, dan mengetahui jumlah RMSE-nya dengan memanggil model fit dengan data latih dan data uji yang sudah didefinisikan pada data preparation sebelumnya. Disini akhir rmse dalam model collaborative mendapatkan nilai error akhir sebesar sekitar 0.20 dan error pada data validasi sebesar 0.21. Untuk melihat nilai tersebut cukup bagus atau tidak tergantung dari hasil sesuai pada gambar 9.
+![model RMSE](https://user-images.githubusercontent.com/81506579/195130669-7464c6e8-1245-4207-9e36-01781dc4a8b8.jpg)
+
+gambar 6. *plot model metric root_mean_squared_error*
+
+Pada evaluasi Collaborative Filtering disini menggunakan Roor Mean Squared Error (RMSE) sebagai metrics evaluasinya. Dalam metric ini mentraining data, mengetahui jumlah loss, dan mengetahui jumlah RMSE-nya dengan memanggil model fit dengan data latih dan data uji yang sudah didefinisikan pada data preparation sebelumnya. Disini akhir rmse dalam model collaborative mendapatkan nilai error akhir sebesar sekitar 0.20 dan error pada data validasi sebesar 0.21 seperti yang terlihat pada gambar 6. Untuk melihat nilai tersebut cukup bagus atau tidak tergantung dari hasil sesuai pada tabel 10.
+
+
+# Kesimpulan dari Pendekatan Content Based Filtering dan Collaborative Filtering
+
+Menurut saya kedua pendekatan tersebut memiliki kelebihan masing- masing karena kedua pendekatan tersebut sangat berguna bila digunakan sesuai kebutuhan yang diperlukan. 
+Pertama adalah Content Based model. Pendekatan ini sangat berguna disini bila pengguna akan mencari genre yang sama dari sebuah film maka pengguna akan diberi langsung daftar genre sesuai yang ingin dicari, misalnya pengguna mencari sebuah genre drama maka pengguna akan diberi rekomendasi beberapa genre drama yang tersedia. Kekurangan dari pendekatan ini adalah pengguna bisa saja tidak cocok dengan film yang direkomendasikan oleh sistem tersebut, karena tidak semua genre drama sesuai yang ingin dicari. Misalnya pengguna menyukai genre drama yang dipadukan dengan action tanpa romansa, sistem bisa saja memberi rekomendasi genre drama dengan romansa yang kental dan tanpa genre action.
+kedua adalah pendekatan Collaborative Filtering. Pendekatan ini sangat berguna bila pengguna sudah mempunyai riwayat menonton film sehingga sistem bisa merekomendasikan film yang sesuai bahkan hampir sama genrenya dengan riwayat yang pengguna tonton. Kekurangan dari pendekatan ini adalah pengguna harus menonton beberapa film lalu memberi rating pada film yang dia tonton, sehingga sistem dapat merekam jejak genre yang pengguna sukai.
+Kalau untuk memilih saya lebih memilih ke Collaborative Filtering, karena pengguna bisa direkomendasikan film sesuai riwayat yang ditonton. Sehingga saat pengguna baru masuk aplikasi tersebut pengguna dapat direkomendasikan menggunakan pendekatan Content Based Model.
 
 
 # Referensi
